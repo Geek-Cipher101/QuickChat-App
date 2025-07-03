@@ -10,3 +10,32 @@ Currently, two official plugins are available:
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+# Chat App Frontend
+
+## Setup
+
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Create a `.env` file in the client directory with:
+   ```env
+   VITE_BACKEND_URL=<your-backend-url>
+   ```
+3. Run in development:
+   ```bash
+   npm run dev
+   ```
+4. Build for production:
+   ```bash
+   npm run build
+   ```
+5. Preview production build:
+   ```bash
+   npm run preview
+   ```
+
+## Deployment
+- Deploy the `dist` folder to your static hosting provider (Vercel, Netlify, etc.).
+- Ensure `VITE_BACKEND_URL` is set to your deployed backend URL.

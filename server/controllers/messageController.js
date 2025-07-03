@@ -30,7 +30,6 @@ export const getUsersForSidebar = async (req, res) => {
             unseenMessages: unseenMessages,
         });
     } catch (error) {
-        console.log(error.message);
         res.json({
             success: false,
             message: error.message,
@@ -65,7 +64,6 @@ export const getMessages = async (req, res) => {
             messages: messages,
         });
     } catch (error) {
-        console.log(error.message);
         res.json({
             success: false,
             message: error.message,
@@ -83,7 +81,6 @@ export const markMessagesAsSeen = async (req, res) => {
             success: true,
         });
     } catch (error) {
-        console.log(error.message);
         res.json({
             success: false,
             message: error.message,
@@ -124,7 +121,6 @@ export const sendMessage = async (req, res) => {
 
 
     } catch (error) {
-        console.log(error.message);
         res.json({
             success: false,
             message: error.message,

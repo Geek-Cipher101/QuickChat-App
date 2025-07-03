@@ -8,9 +8,9 @@
   },
   "type": "module",
   "keywords": [],
-  "author": "",
+  "author": "Akshat",
   "license": "ISC",
-  "description": "",
+  "description": "Chat app backend server",
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "cloudinary": "^2.7.0",
