@@ -1,12 +1,12 @@
-import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
+import React, { createContext, useEffect, useState } from "react";
+
+export const AuthContext = createContext();
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 axios.defaults.baseURL = backendUrl;
-
-export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(localStorage.getItem("token"));
@@ -15,14 +15,13 @@ export const AuthProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
 
     //check if the user is authenticated and if so, set the user data and connect the socket
-
     const checkAuth = async () => {
         try {
             const { data } = await axios.get("/api/auth/check");
             if (data.success) {
                 setAuthUser(data.user);
+                connectSocket(data.user);
             }
-            connectSocket(data.user);
         } catch (error) {
             toast.error(error.message);
         }
@@ -56,9 +55,10 @@ export const AuthProvider = ({ children }) => {
         setToken(null);
         setAuthUser(null);
         setOnlineUser([]);
-        axios.defaults.headers.common["token"] = null;
+        delete axios.defaults.headers.common["token"];
         toast.success("Logged out successfully");
         if (socket) socket.disconnect();
+        setSocket(null);
     };
 
     // update profile function to handle user profile updates
@@ -76,12 +76,15 @@ export const AuthProvider = ({ children }) => {
 
     // connect socket function to handle socket connection and online users updates
     const connectSocket = (userData) => {
-        if (!userData || socket?.connected) return;
+        if (!userData) return;
+        if (socket) {
+            socket.disconnect();
+        }
         const newSocket = io(backendUrl, { query: { userId: userData._id } });
         newSocket.connect();
         setSocket(newSocket);
 
-        newSocket.on("getOnlineUsers", (userIds) => {
+        newSocket.on("getOnlineUser", (userIds) => {
             setOnlineUser(userIds);
         });
     };
@@ -91,7 +94,13 @@ export const AuthProvider = ({ children }) => {
             axios.defaults.headers.common["token"] = token;
         }
         checkAuth();
+        // Cleanup socket on unmount
+        return () => {
+            if (socket) socket.disconnect();
+        };
+        // eslint-disable-next-line
     }, [token]);
+
     const value = {
         axios,
         authUser,
@@ -99,7 +108,7 @@ export const AuthProvider = ({ children }) => {
         socket,
         login,
         logout,
-        updateProfile
+        updateProfile,
     };
 
     return (

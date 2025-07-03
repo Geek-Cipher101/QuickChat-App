@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import assets from "../assets/assets";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import { ChatContext } from "../../context/ChatContext";
+import { ChatContext } from "../../context/ChatContext.jsx";
 
 const Sidebar = () => {
     const {
@@ -14,13 +14,17 @@ const Sidebar = () => {
         setUnseenMessages,
     } = useContext(ChatContext);
 
-    const { logout, onlineUsers } = useContext(AuthContext);
+    const { logout, onlineUser } = useContext(AuthContext);
 
-    const [input, setInput] = useState(false);
+    const [input, setInput] = useState("");
 
     const navigate = useNavigate();
 
-    const filteredUsers = input ? users.filter((user) => user.fullName.toLowerCase().includes(input.toLowerCase())) : users;
+    const filteredUsers = input
+        ? users.filter((user) =>
+              user.fullName.toLowerCase().includes(input.toLowerCase())
+          )
+        : users;
 
     useEffect(() => {
         getUsers();
@@ -79,6 +83,10 @@ const Sidebar = () => {
                     <div
                         onClick={() => {
                             setSelectedUser(user);
+                            setUnseenMessages((prev) => ({
+                                ...prev,
+                                [user._id]: 0,
+                            }));
                         }}
                         key={index}
                         className={`relative flex items-center gap-2 p-2 pl-4 rounded cursor-pointer max-sm:text-sm ${
@@ -92,7 +100,7 @@ const Sidebar = () => {
                         />
                         <div className="flex flex-col leading-5">
                             <p>{user.fullName}</p>
-                            {(onlineUsers || []).includes(user._id) ? (
+                            {(onlineUser || []).includes(user._id) ? (
                                 <span className="text-green-400 text-xs">
                                     Online
                                 </span>

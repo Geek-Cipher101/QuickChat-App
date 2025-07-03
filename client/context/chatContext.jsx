@@ -1,7 +1,6 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { AuthContext } from "./AuthContext";
 import toast from "react-hot-toast";
-
+import { AuthContext } from "./AuthContext";
+import React, { createContext, useContext, useEffect, useState } from "react";
 export const ChatContext = createContext();
 
 export const ChatProvider = ({ children }) => {
@@ -13,7 +12,6 @@ export const ChatProvider = ({ children }) => {
     const { socket, axios } = useContext(AuthContext);
 
     //function to get all users for the sidebar
-
     const getUsers = async () => {
         try {
             const { data } = await axios.get("/api/messages/user");
@@ -96,7 +94,7 @@ export const ChatProvider = ({ children }) => {
         users,
         selectedUser,
         getUsers,
-        setMessages,
+        getMessages,
         sendMessage,
         setSelectedUser,
         unseenMessages,
